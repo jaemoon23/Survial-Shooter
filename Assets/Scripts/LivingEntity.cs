@@ -14,7 +14,7 @@ public class LivingEntity : MonoBehaviour
         Health = maxHealth;
     }
 
-    public virtual void TakeDamage(float damage)
+    public virtual void Damage(float damage, Vector3 hitPoint, Vector3 hitNoraml)
     {
         Health -= damage;
         if (Health <= 0f && !IsDead)

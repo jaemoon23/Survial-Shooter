@@ -14,23 +14,20 @@ public class player : LivingEntity
         
     }
 
-    private void Start()
-    {
-    }
 
     private void Update()
     {
         // 테스트용 데미지 받기
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            TakeDamage(10f);
+            Damage(10f, Vector3.zero, Vector3.zero);
         }
     }
 
-    public override void TakeDamage(float damage)
+    public override void Damage(float damage, Vector3 hitPoint, Vector3 hitNoraml)
     {
         if (IsDead) return;  
-        base.TakeDamage(damage);
+        base.Damage(damage, hitPoint, hitNoraml);
         audioSource.PlayOneShot(hitClip);
         Debug.Log($"{damage}데미지를 받음: {Health}/P{maxHealth}");
         

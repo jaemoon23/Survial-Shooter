@@ -11,4 +11,6 @@ public static class Defines
     public static readonly int hashMove = Animator.StringToHash("Move");
 
     public static readonly string PlayerDie = "Die";
+    public static readonly string MonsterDie = "MonsterDie";
+    public static readonly string MonsterMove = "target";
 }
