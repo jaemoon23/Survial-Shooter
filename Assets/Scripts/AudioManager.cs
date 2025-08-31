@@ -7,40 +7,46 @@ public class AudioManager : MonoBehaviour
     public AudioMixer mixer;
     public Slider musicSlider;
     public Slider sfxSlider;
-    public Toggle muteToggle;
+    public Toggle muteToggle;   
 
-    const float MIN = 0.0001f;
+    const float MIN = 0.0001f;  // log10(0)은 -무한대이므로 0이 아닌 아주 작은 값
 
     void Start()
     {
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVol", 1f);
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol", 1f);
-        muteToggle.isOn = PlayerPrefs.GetInt("Muted", 0) == 1;
+        // 레지스트리에서 설정 불러오기
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVol", 1f);   // 값을 찾지 못하면 기본값 1
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol", 1f);       // 값을 찾지 못하면 기본값 1
+        muteToggle.isOn = PlayerPrefs.GetInt("Muted", 0) == 1;      // 값을 찾지 못하면 기본값 false(0)
 
+        // 불러온 값을 오디오 믹서에 적용
         ApplyMusic(musicSlider.value);
         ApplySFX(sfxSlider.value);
         ApplyMute(muteToggle.isOn);
 
+
+        // UI 이벤트에 함수 연결
+        // onValueChanged >> UI 컴포넌트 값이 변경될 때 발생하는 이벤트
+        // AddListener >> 이벤트가 실행 될 때 호출할 메서드
         musicSlider.onValueChanged.AddListener(ApplyMusic);
         sfxSlider.onValueChanged.AddListener(ApplySFX);
         muteToggle.onValueChanged.AddListener(ApplyMute);
     }
 
-    public void ApplyMusic(float v)
+    public void ApplyMusic(float musicVolume)
     {
-        SetVolume("MusicVol", v);
-        PlayerPrefs.SetFloat("MusicVol", v);
+        SetVolume("MusicVol", musicVolume);             // 오디오 믹서에 볼륨 설정
+        PlayerPrefs.SetFloat("MusicVol", musicVolume);  // 레지스트리에 설정 저장
     }
 
-    public void ApplySFX(float v)
+    public void ApplySFX(float sfxVolume)
     {
-        SetVolume("SFXVol", v);
-        PlayerPrefs.SetFloat("SFXVol", v);
+        SetVolume("SFXVol", sfxVolume);
+        PlayerPrefs.SetFloat("SFXVol", sfxVolume);
     }
 
-    public void ApplyMute(bool on)
+    public void ApplyMute(bool isMuted)
     {
-        if (on)
+        if (isMuted)
         {
             mixer.SetFloat("MasterVol", -80f);
         }
@@ -48,13 +54,14 @@ public class AudioManager : MonoBehaviour
         {
             mixer.SetFloat("MasterVol", 0f);
         }
-        PlayerPrefs.SetInt("Muted", on ? 1 : 0);
+        PlayerPrefs.SetInt("Muted", isMuted ? 1 : 0);
     }
 
-    void SetVolume(string param, float v)
+    // 볼륨을 0~1 사이의 값으로 받아서 dB로 변환하여 오디오 믹서에 설정
+    void SetVolume(string name, float volume)
     {
-        float value = Mathf.Clamp(v, MIN, 1f);
-        float dB = Mathf.Log10(value) * 20f;
-        mixer.SetFloat(param, dB);
+        float value = Mathf.Clamp(volume, MIN, 1f); // 주어진 값을 MIN~1 사이로 제한
+        float dB = Mathf.Log10(value) * 20f;        // dB 변환 공식 dB = 20 * log10(선형값)
+        mixer.SetFloat(name, dB);                   // name에 해당하는 파라미터에 dB 값 설정
     }
 }
