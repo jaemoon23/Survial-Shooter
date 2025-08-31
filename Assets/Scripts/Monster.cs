@@ -26,10 +26,26 @@ public class Monster : LivingEntity, IDamage
     private float attackTimer = 0f; // 공격 타이머
     private bool isAttack = true; // 공격
 
+    public int score;
+
+    public ParticleSystem hitEffect; // 피격 이펙트
+
+    private GameManager gameManager;
+
+    public void Awake()
+    {
+        target = GameObject.FindWithTag(Defines.Player).transform;
+    }
     protected override void OnEnable()
     {
         base.OnEnable();
         isAttack = true;
+    }
+
+    private void Start()
+    {
+        var findGo = GameObject.FindWithTag(Defines.GameManager);
+        gameManager = findGo.GetComponent<GameManager>();
     }
 
     private void Update()
@@ -51,6 +67,10 @@ public class Monster : LivingEntity, IDamage
         base.Damage(damage, hitPoint, hitNoraml);
         audioSource.PlayOneShot(hitClip);
         Debug.Log($"좀비가 {damage} 데미지를 받음: {Health}/P{maxHealth}");
+
+        hitEffect.transform.position = hitPoint;
+        hitEffect.transform.forward = hitNoraml;
+        hitEffect.Play();
     }
 
     protected override void Die()
@@ -58,6 +78,7 @@ public class Monster : LivingEntity, IDamage
         base.Die();
         audioSource.PlayOneShot(deathClip);
         animator.SetTrigger(Defines.MonsterDie);
+        gameManager.AddScore(score);
         StartSinking();
         Debug.Log("몬스터 사망 애니메이션 실행");
     }

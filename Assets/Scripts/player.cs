@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public class player : LivingEntity
@@ -8,20 +9,25 @@ public class player : LivingEntity
     public AudioClip deathClip;
     public Animator animator;
 
+    public Slider healthSlider;
+
+    private GameManager gameManager;
+
     protected override void OnEnable()
     {
         base.OnEnable();
-        
+        healthSlider.value = Health / maxHealth;
     }
 
+    private void Start()
+    {
+        var findGo = GameObject.FindWithTag(Defines.GameManager);
+        gameManager = findGo.GetComponent<GameManager>();
+    }
 
     private void Update()
     {
-        // 테스트용 데미지 받기
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Damage(10f, Vector3.zero, Vector3.zero);
-        }
+
     }
 
     public override void Damage(float damage, Vector3 hitPoint, Vector3 hitNoraml)
@@ -29,8 +35,13 @@ public class player : LivingEntity
         if (IsDead) return;  
         base.Damage(damage, hitPoint, hitNoraml);
         audioSource.PlayOneShot(hitClip);
+
+        if (maxHealth == 0 || Health <= 0)
+        {
+            Health = 0;
+        }
+        healthSlider.value = Health / maxHealth;
         Debug.Log($"{damage}데미지를 받음: {Health}/P{maxHealth}");
-        
     }
 
     protected override void Die()
@@ -38,6 +49,7 @@ public class player : LivingEntity
         base.Die();
         audioSource.PlayOneShot(deathClip);
         animator.SetTrigger(Defines.PlayerDie);
+        gameManager.EndGame();
         Debug.Log("플레이어 사망 애니메이션 실행");
     }
 

@@ -39,6 +39,10 @@ public class Gun : MonoBehaviour
         {
             if (Time.time > (lastFireTime + timeBetFire))
             {
+                if (Time.timeScale == 0f)
+                {
+                    return; // 게임 일시정지 상태에서는 발사하지 않음
+                }
                 Fire();
                 lastFireTime = Time.time;
             }
