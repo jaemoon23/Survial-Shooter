@@ -9,13 +9,13 @@ public class UiManager : MonoBehaviour
     public GameObject menuMapnel;
     public GameObject gameOver;
 
-    public FadeIn fadeIn;
+    public FadeOut fadeOut;
 
    
     private void Start()
     {
-        var findGo = GameObject.FindWithTag(Defines.FadeIn);
-        fadeIn = findGo.GetComponent<FadeIn>();
+        var findGo = GameObject.FindWithTag(Defines.FadeOut);
+        fadeOut = findGo.GetComponent<FadeOut>();
     }
     public void OnEnable()
     {
@@ -31,7 +31,7 @@ public class UiManager : MonoBehaviour
     public void GameOver(bool active)
     {
         gameOver.SetActive(active);
-        StartCoroutine(fadeIn.CoFade());
+        StartCoroutine(fadeOut.CoFade());
     }
     public void MenuPanel(bool active)
     {

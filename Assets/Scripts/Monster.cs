@@ -17,18 +17,18 @@ public class Monster : LivingEntity, IDamage
 
     public new Collider collider;
     public NavMeshAgent agent;
-    private bool isSinking = false; // 몬스터가 침몰 중인지 여부
-    public float sinkSpeed = 2.5f; // 가라앉는 속도
+    private bool isSinking = false;     // 몬스터가 침몰 중인지 여부
+    public float sinkSpeed = 2.5f;      // 가라앉는 속도
 
 
-    public float damage = 20f; // 몬스터의 공격력
+    public float damage = 20f;          // 몬스터의 공격력
     public float attackInterval = 0.3f; // 공격 간격
-    private float attackTimer = 0f; // 공격 타이머
-    private bool isAttack = true; // 공격
+    private float attackTimer = 0f;     // 공격 타이머
+    private bool isAttack = true;       // 공격
 
     public int score;
 
-    public ParticleSystem hitEffect; // 피격 이펙트
+    public ParticleSystem hitEffect;    // 피격 이펙트
 
     private GameManager gameManager;
 

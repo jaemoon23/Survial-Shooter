@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FadeIn : MonoBehaviour
+public class FadeOut : MonoBehaviour
 {
 
     public Image panel;

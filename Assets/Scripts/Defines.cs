@@ -9,7 +9,7 @@ public static class Defines
 
 
     public static readonly string GameManager = "GameController";
-    public static readonly string FadeIn = "FadeIn";
+    public static readonly string FadeOut = "FadeOut";
 
     // 애니메이터
     public static readonly int hashMove = Animator.StringToHash("Move");
